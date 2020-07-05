@@ -7,15 +7,19 @@
           <div class="content-button-top">
               <div class="shang">
                   北京时间：{{Time}}
-                  <button>回到今天</button>
+                  <button @click="getNow()">回到今天</button>
               </div>
               <div class="xia">
-                  <button><span class="iconfont">&#xe692;</span></button>
+                  <button @click="subYear()"><span class="iconfont">&#xe692;</span></button>
                   {{year}}
-                  <button><span class="iconfont">&#xe691;</span></button>年
-                  <button><span class="iconfont">&#xe692;</span></button>
+                  <button @click="plusYear()"><span class="iconfont">&#xe691;</span></button>年
+                  <button @click="subMonth()"><span class="iconfont">&#xe692;</span></button>
                   {{month}}
-                  <button><span class="iconfont">&#xe691;</span></button>月
+                  <button @click="plusMonth()"><span class="iconfont">&#xe691;</span></button>月
+                  <button @click="subDate()"><span class="iconfont">&#xe692;</span></button>
+                  {{date}}
+                  <button @click="plusDate()"><span class="iconfont">&#xe691;</span></button>
+                  日
               </div>
           </div>
           <div class="content-calendar">
@@ -35,11 +39,11 @@ export default {
       return {
           Time: '',
           year: 0,
-          month: 0
+          month: 0,
+          date: 0
       }
     },
     computed:{
-      
     },
     methods: {
       upDatenowTime () {
@@ -49,7 +53,6 @@ export default {
       nowTime () {
         const date = new Date
         this.Time = date.toLocaleTimeString()
-        console.log("获取时间"+this.Time)
       },
       nowYear () {
         const date = new Date
@@ -59,23 +62,151 @@ export default {
         const date = new Date
         this.month = date.getMonth()+1 //注意月份的获取要+1
       },
-    //   subYear () {
-    //     this.year--
-    //   },
-    //   plusYear () {
-    //     this.year++
-    //   },
-    //   subMonth () {
-    //     this.month--
-    //   },
-    //   plsuMonth () {
-    //     this.month++
-    //   }
+      nowDateDay () {
+        const date = new Date
+        this.date = date.getDate()
+      },
+      subYear () {
+        this.year--
+      },
+      plusYear () {
+        this.year++
+      },
+      subMonth () {
+        this.month--
+        if (this.month==0) {
+          this.year--
+          this.month=12
+        }
+      },
+      plusMonth () {
+        this.month++
+        if (this.month==13) {
+          this.year++
+          this.month=1
+        }
+      },
+      subDate () {
+        if(this.year % 4 == 0 && this.year % 100 != 0 || this.year % 400 == 0){
+          if(this.month==1 || this.month==4 || this.month==6 || this.month==8 || this.month==9 || this.month==11){
+            this.date--
+            if(this.date==0){
+              this.month--
+              this.date=31
+              if(this.month==0){
+                this.year--
+                this.month=12
+              }
+            }
+          }
+          else if(this.month==3){
+            this.date--
+            if(this.date==0){
+              this.month--
+              this.date=29
+            }
+          }
+          else if(this.month==2 || this.month==5 || this.month==7 || this.month==10 || this.month==12){
+            this.date--
+            if(this.date==0){
+              this.month--
+              this.date=30
+            }
+          }
+        } else{
+          if(this.month==1 || this.month==4 || this.month==6 || this.month==8 || this.month==9 || this.month==11){
+            this.date--
+            if(this.date==0){
+              this.month--
+              this.date=31
+              if(this.month==0){
+                this.year--
+                this.month=12
+              }
+            }
+          }
+          else if(this.month==3){
+            this.date--
+            if(this.date==0){
+              this.month--
+              this.date=28
+            }
+          }
+          else if(this.month==2 || this.month==5 || this.month==7 || this.month==10 || this.month==12){
+            this.date--
+            if(this.date==0){
+              this.month--
+              this.date=30
+            }
+          }
+        }
+      },
+      plusDate () {
+        if(this.year % 4 == 0 && this.year % 100 != 0 || this.year % 400 == 0){
+          if(this.month==1 || this.month==3 || this.month==5 || this.month==7 || this.month==8 || this.month==10 || this.month==12){
+            this.date++
+            if(this.date==32){
+              this.date=1
+              this.month++
+              if(this.month==13){
+                this.month=1
+                this.year++
+              }
+            }
+          }
+          else if(this.month==2){
+            this.date++
+            if(this.date==30){
+              this.date=1
+              this.month++
+            }
+          }
+          else if(this.month==4 || this.month==6 || this.month==9 || this.month==11){
+            this.date++
+            if(this.date==31){
+              this.date=1
+              this.month++
+            }
+          }
+        } else{
+          if(this.month==1 || this.month==3 || this.month==5 || this.month==7 || this.month==8 || this.month==10 || this.month==12){
+            this.date++
+            if(this.date==32){
+              this.date=1
+              this.month++
+              if(this.month==13){
+                this.month=1
+                this.year++
+              }
+            }
+          }
+          else if(this.month==2){
+            this.date++
+            if(this.date==29){
+              this.date=1
+              this.month++
+            }
+          }
+          else if(this.month==4 || this.month==6 || this.month==9 || this.month==11){
+            this.date++
+            if(this.date==31){
+              this.date=1
+              this.month++
+            }
+          }
+        }
+      },
+      getNow () {
+        this.nowYear()  
+        this.nowMonth() 
+        this.nowDateDay() 
+      }
     },
     mounted () {
       this.upDatenowTime()
       this.nowYear()  //挂载即获取当前年份
       this.nowMonth() //挂载即获取当前月份
+      this.nowDateDay() 
     },
     beforeDestroy () {
       if (this.nowTime) {
