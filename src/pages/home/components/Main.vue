@@ -58,7 +58,19 @@ export default {
       nowMonth () {
         const date = new Date
         this.month = date.getMonth()+1 //注意月份的获取要+1
-      }
+      },
+    //   subYear () {
+    //     this.year--
+    //   },
+    //   plusYear () {
+    //     this.year++
+    //   },
+    //   subMonth () {
+    //     this.month--
+    //   },
+    //   plsuMonth () {
+    //     this.month++
+    //   }
     },
     mounted () {
       this.upDatenowTime()
