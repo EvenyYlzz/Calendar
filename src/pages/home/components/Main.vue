@@ -23,10 +23,39 @@
               </div>
           </div>
           <div class="content-calendar">
-
+            <table class="calendar-table">
+              <tbody class="calendar-tbody">
+                <tr class="calendar-tr1">
+                  <th class="calendar-th" v-for="(item,index) in tbodyDay" :key="index">{{item}}</th>
+                </tr>
+                <tr class="calendar-tr">
+                  <td class="calendar-td" v-for="(item,index) in arr1" :key="index">{{item}}</td>
+                </tr>
+                <tr class="calendar-tr">
+                  <td class="calendar-td" v-for="(item,index) in arr2" :key="index">{{item}}</td>
+                </tr>
+                <tr class="calendar-tr">
+                  <td class="calendar-td" v-for="(item,index) in arr3" :key="index">{{item}}</td>
+                </tr>
+                <tr class="calendar-tr">
+                  <td class="calendar-td" v-for="(item,index) in arr4" :key="index">{{item}}</td>
+                </tr>
+                <tr class="calendar-tr">
+                  <td class="calendar-td" v-for="(item,index) in arr5" :key="index">{{item}}</td>
+                </tr>
+                <tr class="calendar-tr">
+                  <td class="calendar-td" v-for="(item,index) in arr6" :key="index">{{item}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div class="content-button-bottom">
-
+            <div class="learn">
+              <button>学习打卡</button>
+            </div>
+            <div class="ill">
+              <button>疫情打卡</button>
+            </div>
           </div>
       </div>
   </div>
@@ -40,52 +69,81 @@ export default {
           Time: '',
           year: 0,
           month: 0,
-          date: 0
+          date: 0,
+          tbodyDay: ['日','一','二','三','四','五','六'],
+          monthdays: 0,
+          dateday:0,
+          arr1:[],
+          arr2:[],
+          arr3:[],
+          arr4:[],
+          arr5:[],
+          arr6:[]
       }
     },
-    computed:{
+    watch:{
+      month() {
+         this.monthdays = new Date(this.year,this.month,0).getDate()
+         this.dateday = new Date(this.year,this.month-1,1).getDay()
+         this.arrControl()
+      },
+      year() {
+         this.monthdays = new Date(this.year,this.month,0).getDate()
+         this.dateday = new Date(this.year,this.month-1,1).getDay()
+         this.arrControl()
+      }
     },
+    // computed:{
+    //   getOneMonthDays:{
+    //     get(){
+    //       return new Date(this.year,this.month,0).getDate()
+    //     },
+    //     set(){
+    //       this.monthdays = new Date(this.year,this.month,0).getDate()
+    //     }
+    //   }
+    // },
     methods: {
       upDatenowTime () {
         setInterval(this.nowTime,1000) // 这里面的this.nowTime不用在后面加括号，否则执行不了
         console.log("开启定时器")
-      },
+      }, //设置定时器刷新页面实时北京时间
       nowTime () {
         const date = new Date
         this.Time = date.toLocaleTimeString()
-      },
+      },//获取此时实时时间，精确到秒
       nowYear () {
         const date = new Date
         this.year = date.getFullYear()
-      },
+      },//获取今年年份
       nowMonth () {
         const date = new Date
         this.month = date.getMonth()+1 //注意月份的获取要+1
-      },
+      },//获取今年该月月份
       nowDateDay () {
         const date = new Date
         this.date = date.getDate()
-      },
+      },//获取今年该月改日期
       subYear () {
         this.year--
-      },
+      },//按钮年份-1
       plusYear () {
         this.year++
-      },
+      },//按钮年份+1
       subMonth () {
         this.month--
         if (this.month==0) {
           this.year--
           this.month=12
         }
-      },
+      },//按钮月份-1
       plusMonth () {
         this.month++
         if (this.month==13) {
           this.year++
           this.month=1
         }
-      },
+      },//按钮月份+1
       subDate () {
         if(this.year % 4 == 0 && this.year % 100 != 0 || this.year % 400 == 0){
           if(this.month==1 || this.month==4 || this.month==6 || this.month==8 || this.month==9 || this.month==11){
@@ -140,7 +198,7 @@ export default {
             }
           }
         }
-      },
+      },//按钮日期-1
       plusDate () {
         if(this.year % 4 == 0 && this.year % 100 != 0 || this.year % 400 == 0){
           if(this.month==1 || this.month==3 || this.month==5 || this.month==7 || this.month==8 || this.month==10 || this.month==12){
@@ -195,18 +253,189 @@ export default {
             }
           }
         }
-      },
+      },//按钮
       getNow () {
         this.nowYear()  
         this.nowMonth() 
         this.nowDateDay() 
+      },//获取此时年月日
+      getOneMonthDays () {
+        this.monthdays = new Date(this.year,this.month,0).getDate()
+      },
+      getDayOfWeek () {
+        this.dateday = new Date(this.year,this.month-1,1).getDay() //month必须-1
+      },
+      arr4Ri(){
+        this.arr1 = [1,2,3,4,5,6,7]
+        this.arr2 = [8,9,10,11,12,13,14]
+        this.arr3 = [15,16,17,18,19,20,21]
+        this.arr4 = [22,23,24,25,26,27,28]
+        this.arr6 = ['','','','','','','']
+      },
+      arr4Yi(){
+        this.arr1 = ['',1,2,3,4,5,6]
+        this.arr2 = [7,8,9,10,11,12,13]
+        this.arr3 = [14,15,16,17,18,19,20]
+        this.arr4 = [21,22,23,24,25,26,27]
+        this.arr6 = ['','','','','','','']
+      },
+      arr4Er(){
+        this.arr1 = ['','',1,2,3,4,5]
+        this.arr2 = [6,7,8,9,10,11,12]
+        this.arr3 = [13,14,15,16,17,18,19]
+        this.arr4 = [20,21,22,23,24,25,26]
+        this.arr6 = ['','','','','','','']
+      },
+      arr4San(){
+        this.arr1 = ['','','',1,2,3,4]
+        this.arr2 = [5,6,7,8,9,10,11]
+        this.arr3 = [12,13,14,15,16,17,18]
+        this.arr4 = [19,20,21,22,23,24,25]
+        this.arr6 = ['','','','','','','']
+      },
+      arr4Si(){
+        this.arr1 = ['','','','',1,2,3]
+        this.arr2 = [4,5,6,7,8,9,10]
+        this.arr3 = [11,12,13,14,15,16,17]
+        this.arr4 = [18,19,20,21,22,23,24]
+        this.arr6 = ['','','','','','','']
+      },
+      arr4Wu(){
+        this.arr1 = ['','','','','',1,2]
+        this.arr2 = [3,4,5,6,7,8,9]
+        this.arr3 = [10,11,12,13,14,15,16]
+        this.arr4 = [15,18,19,20,21,22,23]
+      },
+      arr4Liu(){
+        this.arr1 = ['','','','','','',1]
+        this.arr2 = [2,3,4,5,6,7,8]
+        this.arr3 = [9,10,11,12,13,14,15]
+        this.arr4 = [14,15,18,19,20,21,22]
+      },
+      arrControl () {
+        if(this.dateday==0){
+          this.arr4Ri()
+          if(this.monthdays==28){
+            this.arr5 = ['','','','','','','']
+          }
+          else if(this.monthdays==29){
+            this.arr5 = [29,'','','','','','']
+          }
+          else if(this.monthdays==30){
+            this.arr5 = [29,30,'','','','','']
+          }
+          else if(this.monthdays==31){
+            this.arr5 = [29,30,31,'','','','']
+          }
+        }
+        else if(this.dateday==1){
+          this.arr4Yi()
+          if(this.monthdays==28){
+            this.arr5 = [28,'','','','','','']
+          }
+          else if(this.monthdays==29){
+            this.arr5 = [28,29,'','','','','']
+          }
+          else if(this.monthdays==30){
+            this.arr5 = [28,29,30,'','','','']
+          }
+          else if(this.monthdays==31){
+            this.arr5 = [28,29,30,31,'','','']
+          }
+        }
+        else if(this.dateday==2){
+          this.arr4Er()
+          if(this.monthdays==28){
+            this.arr5 = [27,28,'','','','','']
+          }
+          else if(this.monthdays==29){
+            this.arr5 = [27,28,29,'','','','']
+          }
+          else if(this.monthdays==30){
+            this.arr5 = [27,28,29,30,'','','']
+          }
+          else if(this.monthdays==31){
+            this.arr5 = [27,28,29,30,31,'','']
+          }
+        }
+        else if(this.dateday==3){
+          this.arr4San()
+          if(this.monthdays==28){
+            this.arr5 = [26,27,28,'','','','']
+          }
+          else if(this.monthdays==29){
+            this.arr5 = [26,27,28,29,'','','']
+          }
+          else if(this.monthdays==30){
+            this.arr5 = [26,27,28,29,30,'','']
+          }
+          else if(this.monthdays==31){
+            this.arr5 = [26,27,28,29,30,31,'']
+          }
+        }
+        else if(this.dateday==4){
+          this.arr4Si()
+          if(this.monthdays==28){
+            this.arr5 = [25,26,27,28,'','','']
+          }
+          else if(this.monthdays==29){
+            this.arr5 = [25,26,27,28,29,'','']
+          }
+          else if(this.monthdays==30){
+            this.arr5 = [25,26,27,28,29,30,'']
+          }
+          else if(this.monthdays==31){
+            this.arr5 = [25,26,27,28,29,30,31]
+          }
+        }
+        else if(this.dateday==5){
+          this.arr4Wu()
+          if(this.monthdays==28){
+            this.arr5 = [24,25,26,27,28,'','']
+            this.arr6 = ['','','','','','','']
+          }
+          else if(this.monthdays==29){
+            this.arr5 = [24,25,26,27,28,29,'']
+            this.arr6 = ['','','','','','','']
+          }
+          else if(this.monthdays==30){
+            this.arr5 = [24,25,26,27,28,29,30]
+            this.arr6 = ['','','','','','','']
+          }
+          else if(this.monthdays==31){
+            this.arr5 = [24,25,26,27,28,29,30]
+            this.arr6 = [31,'','','','','','']
+          }
+        }
+        else if(this.dateday==6){
+          this.arr4Liu()
+          if(this.monthdays==28){
+            this.arr5 = [23,24,25,26,27,28,'']
+            this.arr6 = ['','','','','','','']
+          }
+          else if(this.monthdays==29){
+            this.arr5 = [23,24,25,26,27,28,29]
+            this.arr6 = ['','','','','','','']
+          }
+          else if(this.monthdays==30){
+            this.arr5 = [23,24,25,26,27,28,29]
+            this.arr6 = [30,'','','','','','']
+          }
+          else if(this.monthdays==31){
+            this.arr5 = [23,24,25,26,27,28,29]
+            this.arr6 = [30,31,'','','','','']
+          }
+        }
       }
     },
     mounted () {
       this.upDatenowTime()
-      this.nowYear()  //挂载即获取当前年份
-      this.nowMonth() //挂载即获取当前月份
-      this.nowDateDay() 
+      this.getNow()//挂载即获取此时年月日
+      this.getOneMonthDays()//获取某月天数
+      this.getDayOfWeek()//获取某天星期几
+      this.arrControl()//写入日历数组
+    },
+    updated () {
     },
     beforeDestroy () {
       if (this.nowTime) {
@@ -220,7 +449,7 @@ export default {
 <style lang="stylus" scoped>
 .state
     position :relative
-    top:2.5rem
+    top:1.25rem
     width :100%
     .title
         height:.75rem
@@ -244,8 +473,46 @@ export default {
                 width :100%
         .content-calendar
             background-color:pink
-            height :5rem
+            height :7rem
+            .calendar-table
+                background-color :#eee
+                width:100%
+                border-right:1px solid red
+                border-top:1px solid red
+                border-left:1px solid red
+                border-bottom:1px solid red
+                .calendar-tbody
+                    background-color :#eee
+                    .calendar-tr1
+                        text-align :center
+                        height:1rem
+                        line-height :1rem
+                        border-bottom:1px solid red
+                        .calendar-th
+                            background-color :#eee
+                            border-right:1px solid red
+                    .calendar-tr
+                        text-align :center
+                        height:1rem
+                        line-height :1rem
+                        background-color :#eee
+                        border-bottom:1px solid red
+                        .calendar-td
+                            background-color :#eee
+                            border-right:1px solid red
         .content-button-bottom
-            background-color:orange
             height:.75rem
+            line-height:.75rem
+            width:100%
+            font-size:.35rem
+            .learn
+                height:.75rem
+                float:left
+                width:50%
+                text-align:center
+            .ill
+                height:.75rem
+                float:left
+                width:50%
+                text-align:center
 </style>
