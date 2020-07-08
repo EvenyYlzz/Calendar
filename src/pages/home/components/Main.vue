@@ -7,19 +7,41 @@
           <div class="content-button-top">
               <div class="shang">
                   北京时间：{{Time}}
-                  <button @click="getNow()">回到今天</button>
+                  <button class="shang-back" @click="getNow()">回到今天</button>
               </div>
               <div class="xia">
-                  <button @click="subYear()"><span class="iconfont">&#xe692;</span></button>
-                  {{year}}
-                  <button @click="plusYear()"><span class="iconfont">&#xe691;</span></button>年
-                  <button @click="subMonth()"><span class="iconfont">&#xe692;</span></button>
-                  {{month}}
-                  <button @click="plusMonth()"><span class="iconfont">&#xe691;</span></button>月
-                  <button @click="subDate()"><span class="iconfont">&#xe692;</span></button>
+                  <button style="background-color:white" @click="subYear()">
+                    <span class="iconfont">&#xe692;</span>
+                  </button>
+                  <button @click="yearXiala()" style="background-color:white">
+                    {{year}}
+                  <span class="iconfont">&#xe600;</span>
+                  </button>
+                  <button style="background-color:white" @click="plusYear()">
+                    <span class="iconfont">&#xe691;</span>
+                  </button>&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;
+                  <button style="background-color:white" @click="subMonth()">
+                    <span class="iconfont">&#xe692;</span>
+                  </button>
+                  <button @click="monthXiala()" style="background-color:white">
+                    {{month}}
+                    <span class="iconfont">&#xe600;</span>
+                  </button>
+                  <button style="background-color:white" @click="plusMonth()">
+                    <span class="iconfont">&#xe691;</span>
+                  </button>&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;
+                  <button style="background-color:white" @click="subDate()">
+                    <span class="iconfont">&#xe692;</span>
+                  </button>
                   {{date}}
-                  <button @click="plusDate()"><span class="iconfont">&#xe691;</span></button>
+                  <button style="background-color:white" @click="plusDate()"><span class="iconfont">&#xe691;</span></button>
                   日
+                  <ul class="year" :class="{'year-index':bool2}">
+                    <li @click="yearGet" class="year-li" v-for="(item,index) in year100" :key="index">{{item}}</li>
+                  </ul>
+                  <ul class="month" :class="{'month-index':bool1}">
+                    <li @click="monthGet" class="month-li" v-for="(item,index) in month12" :key="index">{{item}}</li>
+                  </ul>
               </div>
           </div>
           <div class="content-calendar">
@@ -29,32 +51,32 @@
                   <th class="calendar-th" v-for="(item,index) in tbodyDay" :key="index">{{item}}</th>
                 </tr>
                 <tr class="calendar-tr">
-                  <td class="calendar-td" v-for="(item,index) in arr1" :key="index">{{item}}</td>
+                  <td @click="handleGetNumber" :class="(date==item)?'hasColor':'calendar-td'" v-for="(item,index) in arr1" :key="index">{{item}}</td>
                 </tr>
                 <tr class="calendar-tr">
-                  <td class="calendar-td" v-for="(item,index) in arr2" :key="index">{{item}}</td>
+                  <td @click="handleGetNumber" :class="(date==item)?'hasColor':'calendar-td'" v-for="(item,index) in arr2" :key="index">{{item}}</td>
                 </tr>
                 <tr class="calendar-tr">
-                  <td class="calendar-td" v-for="(item,index) in arr3" :key="index">{{item}}</td>
+                  <td @click="handleGetNumber" :class="(date==item)?'hasColor':'calendar-td'" v-for="(item,index) in arr3" :key="index">{{item}}</td>
                 </tr>
                 <tr class="calendar-tr">
-                  <td class="calendar-td" v-for="(item,index) in arr4" :key="index">{{item}}</td>
+                  <td @click="handleGetNumber" :class="(date==item)?'hasColor':'calendar-td'" v-for="(item,index) in arr4" :key="index">{{item}}</td>
                 </tr>
                 <tr class="calendar-tr">
-                  <td class="calendar-td" v-for="(item,index) in arr5" :key="index">{{item}}</td>
+                  <td @click="handleGetNumber" :class="(date==item)?'hasColor':'calendar-td'" v-for="(item,index) in arr5" :key="index">{{item}}</td>
                 </tr>
                 <tr class="calendar-tr">
-                  <td class="calendar-td" v-for="(item,index) in arr6" :key="index">{{item}}</td>
+                  <td @click="handleGetNumber" :class="(date==item)?'hasColor':'calendar-td'" v-for="(item,index) in arr6" :key="index">{{item}}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="content-button-bottom">
             <div class="learn">
-              <button>学习打卡</button>
+              <button class="learn-button">学习打卡</button>
             </div>
             <div class="ill">
-              <button>疫情打卡</button>
+              <button class="ill-button">疫情打卡</button>
             </div>
           </div>
       </div>
@@ -78,7 +100,11 @@ export default {
           arr3:[],
           arr4:[],
           arr5:[],
-          arr6:[]
+          arr6:[],
+          bool1: false,
+          bool2: false,
+          month12:[1,2,3,4,5,6,7,8,9,10,11,12],
+          year100:[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030]
       }
     },
     watch:{
@@ -86,23 +112,23 @@ export default {
          this.monthdays = new Date(this.year,this.month,0).getDate()
          this.dateday = new Date(this.year,this.month-1,1).getDay()
          this.arrControl()
-      },
+         this.bool1 = false
+         this.bool2 = false
+      },//监听月份
       year() {
          this.monthdays = new Date(this.year,this.month,0).getDate()
          this.dateday = new Date(this.year,this.month-1,1).getDay()
          this.arrControl()
+         this.bool1 = false
+         this.bool2 = false
+      },//监听年份     月份年份改变的时候，重新获取该月天数与该月一号星期几，再调用日历生成函数
+      date() {
+        this.bool1 = false
+        this.bool2 = false
       }
     },
-    // computed:{
-    //   getOneMonthDays:{
-    //     get(){
-    //       return new Date(this.year,this.month,0).getDate()
-    //     },
-    //     set(){
-    //       this.monthdays = new Date(this.year,this.month,0).getDate()
-    //     }
-    //   }
-    // },
+    computed:{
+    },
     methods: {
       upDatenowTime () {
         setInterval(this.nowTime,1000) // 这里面的this.nowTime不用在后面加括号，否则执行不了
@@ -257,61 +283,62 @@ export default {
       getNow () {
         this.nowYear()  
         this.nowMonth() 
-        this.nowDateDay() 
+        this.nowDateDay()
+        this.bool1=false
       },//获取此时年月日
       getOneMonthDays () {
         this.monthdays = new Date(this.year,this.month,0).getDate()
-      },
+      },//获取某月天数
       getDayOfWeek () {
         this.dateday = new Date(this.year,this.month-1,1).getDay() //month必须-1
-      },
+      },//获取某天星期几
       arr4Ri(){
         this.arr1 = [1,2,3,4,5,6,7]
         this.arr2 = [8,9,10,11,12,13,14]
         this.arr3 = [15,16,17,18,19,20,21]
         this.arr4 = [22,23,24,25,26,27,28]
         this.arr6 = ['','','','','','','']
-      },
+      },//控制周日是一号的前4个数组+第六个数组
       arr4Yi(){
         this.arr1 = ['',1,2,3,4,5,6]
         this.arr2 = [7,8,9,10,11,12,13]
         this.arr3 = [14,15,16,17,18,19,20]
         this.arr4 = [21,22,23,24,25,26,27]
         this.arr6 = ['','','','','','','']
-      },
+      },//控制周一是一号的前4个数组+第六个数组
       arr4Er(){
         this.arr1 = ['','',1,2,3,4,5]
         this.arr2 = [6,7,8,9,10,11,12]
         this.arr3 = [13,14,15,16,17,18,19]
         this.arr4 = [20,21,22,23,24,25,26]
         this.arr6 = ['','','','','','','']
-      },
+      },//控制周二是一号的前4个数组+第六个数组
       arr4San(){
         this.arr1 = ['','','',1,2,3,4]
         this.arr2 = [5,6,7,8,9,10,11]
         this.arr3 = [12,13,14,15,16,17,18]
         this.arr4 = [19,20,21,22,23,24,25]
         this.arr6 = ['','','','','','','']
-      },
+      },//控制周三是一号的前4个数组+第六个数组
       arr4Si(){
         this.arr1 = ['','','','',1,2,3]
         this.arr2 = [4,5,6,7,8,9,10]
         this.arr3 = [11,12,13,14,15,16,17]
         this.arr4 = [18,19,20,21,22,23,24]
         this.arr6 = ['','','','','','','']
-      },
+      },//控制周四是一号的前4个数组+第六个数组
       arr4Wu(){
         this.arr1 = ['','','','','',1,2]
         this.arr2 = [3,4,5,6,7,8,9]
         this.arr3 = [10,11,12,13,14,15,16]
         this.arr4 = [15,18,19,20,21,22,23]
-      },
+      },//控制周五是一号的前4个数组
       arr4Liu(){
         this.arr1 = ['','','','','','',1]
         this.arr2 = [2,3,4,5,6,7,8]
         this.arr3 = [9,10,11,12,13,14,15]
-        this.arr4 = [14,15,18,19,20,21,22]
-      },
+        this.arr4 = [16,17,18,19,20,21,22]
+      },//控制周六是一号的前4个数组
       arrControl () {
         if(this.dateday==0){
           this.arr4Ri()
@@ -327,7 +354,7 @@ export default {
           else if(this.monthdays==31){
             this.arr5 = [29,30,31,'','','','']
           }
-        }
+        }//控制周日是一号的第5个数组
         else if(this.dateday==1){
           this.arr4Yi()
           if(this.monthdays==28){
@@ -342,7 +369,7 @@ export default {
           else if(this.monthdays==31){
             this.arr5 = [28,29,30,31,'','','']
           }
-        }
+        }//控制周一是一号的第5个数组
         else if(this.dateday==2){
           this.arr4Er()
           if(this.monthdays==28){
@@ -357,7 +384,7 @@ export default {
           else if(this.monthdays==31){
             this.arr5 = [27,28,29,30,31,'','']
           }
-        }
+        }//控制周二是一号的第5个数组
         else if(this.dateday==3){
           this.arr4San()
           if(this.monthdays==28){
@@ -372,7 +399,7 @@ export default {
           else if(this.monthdays==31){
             this.arr5 = [26,27,28,29,30,31,'']
           }
-        }
+        }//控制周三是一号的第5个数组
         else if(this.dateday==4){
           this.arr4Si()
           if(this.monthdays==28){
@@ -387,7 +414,7 @@ export default {
           else if(this.monthdays==31){
             this.arr5 = [25,26,27,28,29,30,31]
           }
-        }
+        }//控制周四是一号的第5个数组
         else if(this.dateday==5){
           this.arr4Wu()
           if(this.monthdays==28){
@@ -406,7 +433,7 @@ export default {
             this.arr5 = [24,25,26,27,28,29,30]
             this.arr6 = [31,'','','','','','']
           }
-        }
+        }//控制周五是一号的后2个数组
         else if(this.dateday==6){
           this.arr4Liu()
           if(this.monthdays==28){
@@ -425,7 +452,27 @@ export default {
             this.arr5 = [23,24,25,26,27,28,29]
             this.arr6 = [30,31,'','','','','']
           }
+        }//控制周六是一号的后2个数组
+      },
+      handleGetNumber (e) {
+        if(e.target.innerText==''){
+          return
         }
+        else{
+          this.date = e.target.innerText
+        }
+      },
+      monthXiala() {
+        this.bool1=!this.bool1
+      },
+      monthGet (e) {
+        this.month = e.target.innerText
+      },
+      yearXiala() {
+        this.bool2=!this.bool2
+      },
+      yearGet (e) {
+        this.year = e.target.innerText
       }
     },
     mounted () {
@@ -467,39 +514,76 @@ export default {
                 height:.75rem
                 line-height:.75rem
                 width :100%
+                .shang-back
+                    border-radius:20%
             .xia
                 height:.75rem
                 line-height:.75rem
                 width :100%
+                position :relative
+                .month-index
+                    z-index :2
+                .month
+                    position : absolute
+                    width:0.5rem
+                    height:5rem
+                    top:0.75rem
+                    left:3.65rem
+                    overflow :auto
+                    background-color:#F5F5F5
+                    border-right:1px solid #D3D3D3
+                    border-left:1px solid #D3D3D3
+                    border-bottom:1px solid #D3D3D3
+                    .month-li
+                        height:0.5rem
+                .year-index
+                    z-index :2
+                .year
+                    position : absolute
+                    width:0.8rem
+                    height:5rem
+                    top:0.75rem
+                    left:1.5rem
+                    overflow :auto
+                    background-color:#F5F5F5
+                    border-right:1px solid #D3D3D3
+                    border-left:1px solid #D3D3D3
+                    border-bottom:1px solid #D3D3D3
+                    .year-li
+                        height:0.5rem
         .content-calendar
-            background-color:pink
+            position:relative
+            z-index:1
             height :7rem
             .calendar-table
-                background-color :#eee
+                background-color :white
                 width:100%
-                border-right:1px solid red
-                border-top:1px solid red
-                border-left:1px solid red
-                border-bottom:1px solid red
+                border-right:1px solid #D3D3D3
+                border-top:1px solid #D3D3D3
+                border-left:1px solid #D3D3D3
+                border-bottom:1px solid #D3D3D3
                 .calendar-tbody
-                    background-color :#eee
+                    background-color :white
                     .calendar-tr1
                         text-align :center
                         height:1rem
                         line-height :1rem
-                        border-bottom:1px solid red
+                        border-bottom:1px solid #D3D3D3
                         .calendar-th
-                            background-color :#eee
-                            border-right:1px solid red
+                            background-color :white
+                            border-right:1px solid #D3D3D3
                     .calendar-tr
                         text-align :center
                         height:1rem
                         line-height :1rem
-                        background-color :#eee
-                        border-bottom:1px solid red
+                        border-bottom:1px solid #D3D3D3
                         .calendar-td
-                            background-color :#eee
-                            border-right:1px solid red
+                            border-right:1px solid #D3D3D3
+                        .hasColor
+                            background-color :#1E90FF
+                            border-right:1px solid #D3D3D3
+                            color:white
+                            font-weight:bold
         .content-button-bottom
             height:.75rem
             line-height:.75rem
@@ -510,9 +594,13 @@ export default {
                 float:left
                 width:50%
                 text-align:center
+                .learn-button
+                    border-radius:20%
             .ill
                 height:.75rem
                 float:left
                 width:50%
                 text-align:center
+                .ill-button
+                    border-radius:20%
 </style>
