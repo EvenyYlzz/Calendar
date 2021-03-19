@@ -13,7 +13,7 @@ export default {
       HomeMain
     }
 }
-//测试
+//
 </script>
 
 <style lang="stylus" scoped>
